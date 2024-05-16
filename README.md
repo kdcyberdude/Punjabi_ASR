@@ -13,6 +13,33 @@ We have benchmarked the ASR model using the IndicSuperb - [AI4Bharat/IndicSUPERB
 
 These Word Error Rates (WERs) demonstrate the current capabilities and focus areas for improvement in our models.
 
+## Example Usage
+To use the `w2v-bert-punjabi` model for speech recognition, follow the steps below. This example demonstrates loading the model and processing an audio file for speech-to-text conversion.
+
+### Code
+```python
+import speech_utils as su
+from m4t_processor_with_lm import M4TProcessorWithLM
+from transformers import Wav2Vec2BertForCTC, pipeline
+
+# Load the model and processor
+model_id = 'kdcyberdude/w2v-bert-punjabi'
+processor = M4TProcessorWithLM.from_pretrained(model_id)
+model = Wav2Vec2BertForCTC.from_pretrained(model_id)
+
+# Set up the pipeline
+pipe = pipeline('automatic-speech-recognition', model=model, tokenizer=processor.tokenizer, feature_extractor=processor.feature_extractor, decoder=processor.decoder, return_timestamps='word', device='cuda:0')
+
+# Process the audio file
+output = pipe("example.wav", chunk_length_s=20, stride_length_s=(4, 4))
+su.pbprint(output['text'])
+```
+
+https://github.com/kdcyberdude/Punjabi_ASR/assets/34835322/88515c45-3212-4457-8d72-a35de0060d65
+
+**Transcription:**
+ਉਹ ਕਹਿੰਦੇ ਸਾਡਾ ਸੁਨੇਹਾ ਹੁਣ ਜਾ ਕੇ ਅਹਿਮਦ ਸ਼ਾਹ ਬਦਾਲੀ ਨੂੰ ਦੇ ਦਿਓ ਉਹਨੇ ਸਾਨੂੰ ਪੇਸ਼ਕਸ਼ ਭੇਜੀ ਸੀ ਤਾਜ ਉਸ ਦਾ ਤੇ ਰਾਜ ਸਾਡਾ ਉਹਨੇ ਕਿਹਾ ਸੀ ਕਣਕ ਕੋਰਾ ਮੱਕੀ ਬਾਜਰਾ ਜਵਾਰ ਦੇ ਦਿਆ ਕਰੋ ਤੇ ਜ਼ਿੰਦਗੀ ਜੀ ਸਕਦੇ ਓ ਹੁਣ ਸਾਡਾ ਜਵਾਬ ਉਹਨੂੰ ਦੇ ਦਿਓ ਕਿ ਸਾਡੀ ਜੰਗ ਕੇਸ ਗੱਲ ਦੀ ਐ ਸਾਡੇ ਵੱਲੋਂ ਸ਼ਾਹ ਨੂੰ ਕਹਿ ਦੇਣਾ ਜਾ ਕੇ ਮਿਲਾਂਗੇ ਉਸ ਨੂੰ ਰਣ ਵਿੱਚ ਹੱਥ ਤੇਗ ਉਠਾ ਕੇ ਸ਼ਰਤਾਂ ਲਿਖਾਂਗੇ ਰੱਤ ਨਾਲ ਖੈਬਰ ਕੋਲ ਜਾ ਕੇ ਸ਼ਾਹ ਨਜ਼ਰਾਨੇ ਸਾਥੋਂ ਭਾਲਦਾ ਇਉਂ ਈਨ ਮਨਾ ਕੇ ਪਰ ਸ਼ੇਰ ਨਾ ਜਿਉਂਦੇ ਸੀਤਲਾ ਨੱਕ ਨੱਥ ਪਾ ਕੇ ਇਹ ਸੀ ਉਸ ਵੇਲੇ ਸਾਡੇ ਇਹਨਾਂ ਜਰਨੈਲਾਂ ਦਾ ਕਿਰਦਾਰ ਬਹੁਤ ਵੱਡਾ ਜੀਵਨ ਹੈ ਜਿਹਦੇ ਚ ਰਾਜਨੀਤੀ ਕੂਟਨੀਤੀ ਯੁੱਧ ਨੀਤੀ ਧਰਮਨੀਤੀ ਸਭ ਕੁਝ ਭਰਿਆ ਪਿਆ ਹੈ
+
 ## Datasets
 The training and testing data used in this project are available on Hugging Face:
 - [Punjabi ASR Datasets](https://huggingface.co/datasets/kdcyberdude/Punjabi_ASR_datasets)
