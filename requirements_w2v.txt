@@ -1,0 +1,10 @@
+matplotlib
+datasets
+transformers
+torchaudio
+jiwer
+accelerate
+PyExecJS
+indic-num2words
+librosa
+soundfile

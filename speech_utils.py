@@ -6,12 +6,21 @@ import json
 from num_to_words import num_to_word
 import numpy as np
 from datasets import load_metric
+import subprocess
+import numpy as np
 
+SAMPLE_RATE = 16000
 wer_metric = load_metric("wer")
+digit_check_pattern = re.compile(r'^(?=.*\d)(?=.*\D).+$')
+
 
 # Punjabi font converter
-with open('converter.js', 'r') as f:
-    js_code = f.read()
+try:
+    with open('../converter.js', 'r') as f:
+        js_code = f.read()
+except:
+    with open('./converter.js', 'r') as f:
+        js_code = f.read()
 ctx = execjs.compile(js_code)
 
 replacements = {
@@ -163,6 +172,27 @@ def normalize_texts_for_inference(ds, vocab_chars, text_column='text', strategy=
 
     return ds
 
+def string_contains_digit(text):
+    return bool(digit_check_pattern.search(text))
+
+def count_strings_containing_digit(texts):
+    count = 0
+    for text in texts:
+        if digit_check_pattern.search(text):
+            count += 1
+    print(f'Count: {count} out of {len(texts)} | Percentage: {count/len(texts)*100:.2f}%')
+    return count
+
+# Handle the case of numbers; for ex: 16,000 -> 16000
+def normalized_text(text, vocab_chars):
+    if string_contains_digit(text):
+        return ''
+    for c in text:
+        if c not in vocab_chars:
+            text = text.replace(c, ' ')
+    text = re.sub(r'\s+', ' ', text.strip())
+    return text
+
 
 def check_sents_count(chars_list, ds, text_column='normalized_text'):
     texts = ds[text_column]
@@ -188,14 +218,28 @@ def pbprint(txt):
     print(res)
     return res
 
+def print_green(text, end='\n'):
+    print(f"\x1b[32m{text}\x1b[0m", end=end)
 
-def print_red(text):
-    print(f"\x1b[31m\"{text}\"\x1b[0m")
+def print_blue(text, end='\n'):
+    print(f"\x1b[34m{text}\x1b[0m", end=end)
+
+def print_red(text, end='\n'):
+    print(f"\x1b[31m\"{text}\"\x1b[0m", end=end)
+
+def get_red(text):
+    return f"\x1b[31m{text}\x1b[0m"
+
+def get_green(text):
+    return f"\x1b[32m{text}\x1b[0m"
+
+def get_blue(text):
+    return f"\x1b[34m{text}\x1b[0m"
 
 
-def normalize_text_ds(ds, replace_vowels=False):
-    ds['train'] = normalize_transcript(ds['train'], replace_vowels)
-    ds['test'] = normalize_transcript(ds['test'], replace_vowels)
+def normalize_text_ds(ds, replace_vowels=False, remove_digits=False):
+    ds['train'] = normalize_transcript(ds['train'], replace_vowels, remove_digits=remove_digits)
+    ds['test'] = normalize_transcript(ds['test'], replace_vowels, remove_digits=remove_digits)
     return ds
 
 
@@ -348,3 +392,51 @@ def compute_wer_metrics(pred, processor):
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
 
     return {"wer": wer}
+
+def load_audio(file: str, sr: int = SAMPLE_RATE):
+    """
+    Open an audio file and read as mono waveform, resampling as necessary
+
+    Parameters
+    ----------
+    file: str
+        The audio file to open
+
+    sr: int
+        The sample rate to resample the audio if necessary
+
+    Returns
+    -------
+    A NumPy array containing the audio waveform, in float32 dtype.
+    """
+    try:
+        # Launches a subprocess to decode audio while down-mixing and resampling as necessary.
+        # Requires the ffmpeg CLI to be installed.
+        cmd = [
+            "ffmpeg",
+            "-nostdin",
+            "-threads",
+            "0",
+            "-i",
+            file,
+            "-f",
+            "s16le",
+            "-ac",
+            "1",
+            "-acodec",
+            "pcm_s16le",
+            "-ar",
+            str(sr),
+            "-",
+        ]
+        out = subprocess.run(cmd, capture_output=True, check=True).stdout
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Failed to load audio: {e.stderr.decode()}") from e
+
+    return np.frombuffer(out, np.int16).flatten().astype(np.float32) / 32768.0
+
+def interpolate_nans(x, method='nearest'):
+    if x.notnull().sum() > 1:
+        return x.interpolate(method=method).ffill().bfill()
+    else:
+        return x.ffill().bfill()

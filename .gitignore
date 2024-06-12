@@ -3,3 +3,8 @@ wandb/
 checkpoints/
 .ipynb_checkpoints/
 processors/
+cache_dir/
+datasets/
+test_scripts/
+temp_files/
+creds.py

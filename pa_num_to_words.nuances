@@ -1,0 +1,18 @@
+2005 - num_to_word('8', lang='pa')
+2020
+8
+15
+
+
+15ਵੀਂ - num_to_word('15', lang='pa')[:-2]
+
+
+ਕੋਵਿਡ-19 - ninteen
+
+
+56 ਤਰੀਕੇ - ਛਪਿੰਜਾ by num_to_word but chapan speaking - rejected sample
+
+
+1639 - num_to_word('16', lang='pa') + 'ਸੌ' + num_to_word('39', lang='pa')
+1945
+1958
