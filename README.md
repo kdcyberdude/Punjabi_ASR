@@ -64,3 +64,13 @@ We are actively seeking collaborators and sponsors to expand our efforts on the 
 
 - **Issues and Contributions:** Encounter an issue or want to help? Create a [GitHub issue](https://github.com/kdcyberdude/Punjabi_ASR/issues) or submit a pull request to contribute directly.
 - **Sponsorship:** If you are interested in sponsoring, especially in terms of compute resources, please email us at kdsingh.cyberdude@gmail.com to discuss collaboration opportunities.
+
+## Citation
+```
+@misc{punjabi-asr,
+  author    = "Karandeep Singh",
+  title     = "Punjabi ASR",
+  year      = "2024",
+  howpublished = {\url{https://github.com/kdcyberdude/Punjabi_ASR}},
+}
+```
