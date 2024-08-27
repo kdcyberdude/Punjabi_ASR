@@ -52,11 +52,11 @@ Our current model is hosted on Hugging Face, and you can explore its capabilitie
 ## Next Steps
 Here are the key areas we're focusing on to advance our Punjabi ASR project:
 
-- [ ] **Training Whisper:** Implement and train the Whisper model to compare its performance against our current models.
-- [ ] **Filtering Pipeline:** Develop a robust filtering pipeline to enhance dataset quality by addressing transcription inaccuracies found in datasets like Shrutilipi, IndicSuperb, and IndicTTS.
-- [ ] **Building a Custom Dataset:** Compile approximately 500 hours of high-quality Punjabi audio data to support diverse and comprehensive training.
+- [x] **Training Whisper:** Implement and train the Whisper model to compare its performance against our current models.
+- [x] **Filtering Pipeline:** Develop a robust filtering pipeline to enhance dataset quality by addressing transcription inaccuracies found in datasets like Shrutilipi, IndicSuperb, and IndicTTS.
+- [x] **Building a Custom Dataset:** Compile approximately 500 hours of high-quality Punjabi audio data to support diverse and comprehensive training.
 - [ ] **Multilingual Training:** Utilize the linguistic similarities between Punjabi and Hindi to improve model training through multilingual datasets.
-- [ ] **Data Augmentation:** Apply techniques such as speed variation and background noise addition to training to bolster the ASR system's robustness.
+- [x] **Data Augmentation:** Apply techniques such as speed variation and background noise addition to training to bolster the ASR system's robustness.
 - [ ] **Iterative Training:** Continuously retrain models like w2v-bert or Whisper based on experimental outcomes and enhanced data insights.
 
 ## Collaboration and Support
